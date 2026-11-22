@@ -29,6 +29,7 @@ export async function Categories() {
     <section className="bg-secondary/40 py-16 sm:py-20" aria-labelledby="categories-heading">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionHeading
+          id="categories-heading"
           eyebrow="Craving something?"
           title="Explore Pizza Categories"
           description="From timeless classics to gourmet creations, find exactly what you feel like eating."

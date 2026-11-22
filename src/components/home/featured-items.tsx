@@ -23,6 +23,7 @@ export async function FeaturedItems() {
     <section className="py-16 sm:py-20" aria-labelledby="featured-heading">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionHeading
+          id="featured-heading"
           eyebrow="Fresh from the oven"
           title="Featured Menu Items"
           description="Handpicked favorites from our best local pizzerias, ready to be at your door."

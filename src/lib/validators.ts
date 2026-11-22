@@ -26,3 +26,20 @@ export const signUpSchema = z
 
 export type SignInValues = z.infer<typeof signInSchema>;
 export type SignUpValues = z.infer<typeof signUpSchema>;
+
+export const todayString = (): string => {
+  const d = new Date();
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+};
+
+export const orderSchema = z.object({
+  deliveryDate: z
+    .string()
+    .min(1, "Choose a delivery date")
+    .refine((v) => v >= todayString(), "Delivery date cannot be in the past"),
+  deliveryAddress: z.string().trim().min(5, "Enter a complete delivery address").max(300),
+  message: z.string().trim().max(500, "Keep the message under 500 characters").optional(),
+});
+
+export type OrderValues = z.infer<typeof orderSchema>;

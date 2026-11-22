@@ -1,6 +1,6 @@
 import { ObjectId } from "mongodb";
 import { auth } from "../src/lib/auth";
-import { db, mongoClient } from "../src/lib/mongodb";
+import { db, ensureMongo, mongoClient } from "../src/lib/mongodb";
 import { customers, DEMO_PASSWORD, items, vendors } from "./seed-data";
 
 const users = db.collection("users");
@@ -63,6 +63,7 @@ async function seedDemo() {
 }
 
 async function main() {
+  await ensureMongo();
   await seedAdmin();
   if (process.argv.includes("--admin-only")) return;
   await seedDemo();

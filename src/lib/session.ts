@@ -3,9 +3,23 @@ import { cache } from "react";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { auth } from "./auth";
+import { ensureMongo } from "./mongodb";
 import type { Role } from "./types";
 
-export const getSession = cache(async () => auth.api.getSession({ headers: await headers() }));
+export const getSession = cache(async () => {
+  await ensureMongo();
+  return auth.api.getSession({ headers: await headers() });
+});
+
+// For public pages: never let a database hiccup break the page, just render as signed out.
+export async function getOptionalSession() {
+  try {
+    return await getSession();
+  } catch (err) {
+    console.error("Session lookup failed", err);
+    return null;
+  }
+}
 
 export const dashboardPath = (role?: string | null): string =>
   role === "admin" || role === "vendor" || role === "customer" ? `/dashboard/${role}` : "/";

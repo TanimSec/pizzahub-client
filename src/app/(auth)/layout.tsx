@@ -2,10 +2,10 @@ import type { ReactNode } from "react";
 import { redirect } from "next/navigation";
 import { Logo } from "@/components/brand/logo";
 import { PizzaIllustration } from "@/components/home/pizza-illustration";
-import { dashboardPath, getSession } from "@/lib/session";
+import { dashboardPath, getOptionalSession } from "@/lib/session";
 
 export default async function AuthLayout({ children }: { children: ReactNode }) {
-  const session = await getSession();
+  const session = await getOptionalSession();
   if (session) redirect(dashboardPath((session.user as { role?: string }).role));
 
   return (

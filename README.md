@@ -13,7 +13,7 @@ PizzaHub is a pizza ordering and delivery platform. Customers discover local piz
 - Role-based dashboards for Customer, Vendor and Admin with sidebar navigation, statistic cards and charts. Wrong-role URLs are redirected on the server.
 - Public Browse Menu with search, category and location filters, price range, price sorting and pagination.
 - Item details with image gallery, order dialog (delivery date, address, instructions), duplicate and self-order protection.
-- Vendor: add, edit, delete and hide items (ImgBB image upload), accept or reject orders, Free vs Premium subscription through Stripe Checkout.
+- Vendor: add, edit, delete and hide items (image upload through the API, hosted on Cloudinary or ImgBB), accept or reject orders, Free vs Premium subscription through Stripe Checkout.
 - Customer: order tracking with status timeline, cancel pending orders, favorites.
 - Admin: search users, block and unblock, review and moderate menu items, read-only transactions.
 - Light and dark mode, Motion animations that respect reduced-motion, custom 404 and error pages, loading and empty states, toast notifications.
@@ -47,7 +47,7 @@ npm run seed
 node --env-file=.env.local --import tsx scripts/seed.ts --admin-only   # admin only
 ```
 
-Demo accounts created by the full seed use the password `Pizza123`: `giuseppe@pizzahub.demo` (Premium vendor), `sofia@pizzahub.demo`, `marco@pizzahub.demo`, `customer@pizzahub.demo`. Seed item photos point at Unsplash; replace them with your own ImgBB images through the vendor dashboard.
+Demo accounts created by the full seed use the password `Pizza123`: `giuseppe@pizzahub.demo` (Premium vendor), `sofia@pizzahub.demo`, `marco@pizzahub.demo`, `customer@pizzahub.demo`. Seed item photos point at Unsplash; replace them with your own images through the vendor dashboard.
 
 ## Environment variables
 

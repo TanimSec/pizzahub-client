@@ -1,5 +1,5 @@
 import { betterAuth } from "better-auth";
-import { APIError } from "better-auth/api";
+import { APIError, createAuthMiddleware } from "better-auth/api";
 import { mongodbAdapter } from "better-auth/adapters/mongodb";
 import { jwt } from "better-auth/plugins";
 import { nextCookies } from "better-auth/next-js";
@@ -39,6 +39,17 @@ export const auth = betterAuth({
       clientId: process.env.GOOGLE_CLIENT_ID as string,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
     },
+  },
+  hooks: {
+    before: createAuthMiddleware(async (ctx) => {
+      if (ctx.path !== "/sign-up/email") return;
+      const password = String(ctx.body?.password ?? "");
+      if (password.length < 6 || !/[A-Z]/.test(password) || !/[a-z]/.test(password)) {
+        throw new APIError("BAD_REQUEST", {
+          message: "Password needs at least 6 characters, one uppercase and one lowercase letter",
+        });
+      }
+    }),
   },
   databaseHooks: {
     user: {

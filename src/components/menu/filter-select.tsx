@@ -19,9 +19,11 @@ interface Props {
 export function FilterSelect({ id, label, value, options, onChange }: Props) {
   return (
     <div className="space-y-1.5">
-      <Label htmlFor={id} className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-        {label}
-      </Label>
+      {label && (
+        <Label htmlFor={id} className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+          {label}
+        </Label>
+      )}
       <Select value={value} items={options} onValueChange={(v) => onChange(v ?? options[0].value)}>
         <SelectTrigger id={id} className="h-11 w-full">
           <SelectValue />

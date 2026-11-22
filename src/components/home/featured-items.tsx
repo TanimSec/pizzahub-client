@@ -6,7 +6,8 @@ import { SectionHeading } from "@/components/shared/section-heading";
 import { EmptyState } from "@/components/shared/empty-state";
 import { ButtonLink } from "@/components/ui/button-link";
 import { MenuItemCard } from "@/components/menu/menu-item-card";
-import { Reveal, stagger } from "@/components/motion/reveal";
+import { Reveal } from "@/components/motion/reveal";
+import { stagger } from "@/lib/stagger";
 
 async function loadFeatured(): Promise<MenuItem[]> {
   try {

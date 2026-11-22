@@ -1,6 +1,7 @@
 import { BadgePercent, ChefHat, CreditCard, MapPinned, ShieldCheck, Truck, type LucideIcon } from "lucide-react";
 import { SectionHeading } from "@/components/shared/section-heading";
-import { Reveal, stagger } from "@/components/motion/reveal";
+import { Reveal } from "@/components/motion/reveal";
+import { stagger } from "@/lib/stagger";
 
 const benefits: { icon: LucideIcon; title: string; text: string }[] = [
   { icon: ChefHat, title: "Local pizzerias you can trust", text: "Every restaurant is verified, so you order from real neighborhood kitchens." },

@@ -1,6 +1,7 @@
 import { Quote, Star } from "lucide-react";
 import { SectionHeading } from "@/components/shared/section-heading";
-import { Reveal, stagger } from "@/components/motion/reveal";
+import { Reveal } from "@/components/motion/reveal";
+import { stagger } from "@/lib/stagger";
 
 const reviews = [
   { name: "Maria L.", role: "Customer", text: "Ordering was effortless and the pizza arrived exactly when I asked. The special-instructions box is a lifesaver." },

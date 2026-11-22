@@ -1,6 +1,7 @@
 import { ClipboardCheck, PackageCheck, Search, type LucideIcon } from "lucide-react";
 import { SectionHeading } from "@/components/shared/section-heading";
-import { Reveal, stagger } from "@/components/motion/reveal";
+import { Reveal } from "@/components/motion/reveal";
+import { stagger } from "@/lib/stagger";
 
 const steps: { icon: LucideIcon; title: string; text: string }[] = [
   { icon: Search, title: "Browse the menu", text: "Search and filter pizzas, sides and desserts from restaurants near you." },

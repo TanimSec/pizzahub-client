@@ -24,5 +24,3 @@ export function Reveal({ children, delay = 0, y = 24, className }: Props) {
     </motion.div>
   );
 }
-
-export const stagger = (index: number, step = 0.06, max = 6): number => Math.min(index, max) * step;

@@ -2,7 +2,8 @@ import Link from "next/link";
 import { Beef, Cake, Carrot, Pizza, Sparkles, UtensilsCrossed, type LucideIcon } from "lucide-react";
 import type { Category } from "@/lib/constants";
 import { SectionHeading } from "@/components/shared/section-heading";
-import { Reveal, stagger } from "@/components/motion/reveal";
+import { Reveal } from "@/components/motion/reveal";
+import { stagger } from "@/lib/stagger";
 import { publicGet } from "@/lib/server-api";
 
 const icons: Record<Category, LucideIcon> = {

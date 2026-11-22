@@ -43,3 +43,14 @@ export const orderSchema = z.object({
 });
 
 export type OrderValues = z.infer<typeof orderSchema>;
+
+export const itemSchema = z.object({
+  itemName: z.string().trim().min(2, "Item name is too short").max(80),
+  category: z.string().min(1, "Choose a category"),
+  description: z.string().trim().min(10, "Description must be at least 10 characters").max(1000),
+  price: z.number({ error: "Enter a valid price" }).positive("Price must be greater than 0").max(1000, "Price cannot exceed $1000"),
+  location: z.string().trim().min(2, "Enter the area or city").max(80),
+  images: z.array(z.string()).min(1, "Upload at least one image").max(5),
+});
+
+export type ItemValues = z.infer<typeof itemSchema>;

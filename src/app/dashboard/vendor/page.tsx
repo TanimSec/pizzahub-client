@@ -1,0 +1,8 @@
+import type { Metadata } from "next";
+import { VendorOverview } from "@/components/dashboard/vendor/vendor-overview";
+
+export const metadata: Metadata = { title: "Vendor Overview" };
+
+export default function VendorDashboardPage() {
+  return <VendorOverview />;
+}

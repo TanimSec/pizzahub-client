@@ -21,3 +21,5 @@ export const FREE_ITEM_LIMIT = 3;
 
 export const ORDER_STATUSES = ["pending", "accepted", "rejected", "cancelled"] as const;
 export const ITEM_STATUSES = ["pending", "approved", "rejected", "inactive"] as const;
+
+export const PREMIUM_PRICE_LABEL = process.env.NEXT_PUBLIC_PREMIUM_PRICE_LABEL ?? "$9.99 / month";

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { AlertTriangle, CheckCircle2, Clock } from "lucide-react";
 import { ApiError } from "@/lib/api-error";
@@ -21,7 +21,8 @@ function Panel({ icon, title, children, tone }: { icon: React.ReactNode; title: 
 
 export function PaymentSuccess({ sessionId }: { sessionId: string | null }) {
   const qc = useQueryClient();
-  const { data, isLoading, isError, error, dataUpdateCount } = useSessionStatus(sessionId);
+  const { data, isLoading, isError, error, dataUpdatedAt } = useSessionStatus(sessionId);
+  const [startedAt] = useState(() => Date.now());
 
   useEffect(() => {
     if (data?.status === "paid") qc.invalidateQueries({ queryKey: ["vendor"] });
@@ -65,7 +66,7 @@ export function PaymentSuccess({ sessionId }: { sessionId: string | null }) {
   }
 
   if (data?.status === "pending") {
-    const slow = dataUpdateCount >= 20;
+    const slow = dataUpdatedAt - startedAt > 40_000;
     return (
       <Panel icon={<Clock className="size-8" />} title={slow ? "Still confirming" : "Confirming your payment"} tone="bg-warning/25 text-warning-foreground">
         <p className="text-muted-foreground">

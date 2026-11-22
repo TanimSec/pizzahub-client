@@ -2,7 +2,8 @@
 
 PizzaHub is a pizza ordering and delivery platform. Customers discover local pizzerias, browse menus and place orders. Vendors publish menu items and manage incoming orders. Admins moderate users, menu items and subscription payments.
 
-- **Live site:** _add after deployment_
+- **Live site:** https://pizzahub-client-alpha-hazel.vercel.app
+- **Live API:** https://pizzahub-server-orpin.vercel.app
 - **Client repository:** https://github.com/TanimSec/pizzahub-client
 - **Server repository:** https://github.com/TanimSec/pizzahub-server
 

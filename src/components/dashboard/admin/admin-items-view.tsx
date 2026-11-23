@@ -21,6 +21,7 @@ import { StatusBadge } from "@/components/shared/status-badge";
 import { FilterSelect } from "@/components/menu/filter-select";
 import { ItemImage } from "@/components/menu/item-image";
 import { DashboardHeading } from "../dashboard-heading";
+import { RecordCard, RecordList } from "../record-card";
 
 const STATUS_OPTIONS = [{ value: "all", label: "All statuses" }, ...ITEM_STATUSES.map((s) => ({ value: s, label: s[0].toUpperCase() + s.slice(1) }))];
 const CATEGORY_OPTIONS = [{ value: "all", label: "All categories" }, ...CATEGORIES.map((c) => ({ value: c, label: c }))];
@@ -99,7 +100,7 @@ export function AdminItemsView() {
         <EmptyState title="No menu items found" description="Adjust the search or filters." />
       ) : (
         <>
-          <div className={`overflow-x-auto rounded-2xl border bg-card ${isFetching ? "opacity-70" : ""}`}>
+          <div className={`hidden overflow-x-auto rounded-2xl border bg-card xl:block ${isFetching ? "opacity-70" : ""}`}>
             <Table>
               <TableHeader>
                 <TableRow>
@@ -164,6 +165,52 @@ export function AdminItemsView() {
               </TableBody>
             </Table>
           </div>
+          <RecordList className={isFetching ? "opacity-70" : ""}>
+            {data.items.map((item) => (
+              <RecordCard
+                key={item._id}
+                media={<ItemImage src={item.images[0]} alt={item.itemName} sizes="64px" className="size-14 shrink-0 rounded-xl" />}
+                title={item.itemName}
+                subtitle={item.vendor?.businessName || item.vendor?.name || "Unknown vendor"}
+                badge={<StatusBadge status={item.status} />}
+                fields={[
+                  { label: "Category", value: item.category },
+                  { label: "Price", value: formatPrice(item.price) },
+                  { label: "Location", value: item.location, wide: true },
+                ]}
+                actions={
+                  <>
+                    {item.status === "pending" ? (
+                      <>
+                        <Button size="sm" className="flex-1" disabled={setItemStatus.isPending} onClick={() => changeStatus(item, "approved")}>
+                          <Check /> Approve
+                        </Button>
+                        <Button size="sm" variant="outline" className="flex-1" disabled={setItemStatus.isPending} onClick={() => changeStatus(item, "rejected")}>
+                          <X /> Reject
+                        </Button>
+                      </>
+                    ) : (
+                      <DropdownMenu>
+                        <DropdownMenuTrigger render={<Button size="sm" variant="outline" disabled={setItemStatus.isPending} />}>
+                          Change status <ChevronDown />
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="start">
+                          {ITEM_STATUSES.filter((st) => st !== item.status).map((st) => (
+                            <DropdownMenuItem key={st} className="capitalize" onClick={() => changeStatus(item, st)}>
+                              Mark {st}
+                            </DropdownMenuItem>
+                          ))}
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    )}
+                    <Button variant="ghost" size="sm" className="text-destructive" onClick={() => setDeleting(item)}>
+                      <Trash2 /> Delete
+                    </Button>
+                  </>
+                }
+              />
+            ))}
+          </RecordList>
           <Pager page={data.page} pages={data.pages} onChange={setPage} />
         </>
       )}

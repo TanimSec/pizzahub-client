@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -22,7 +21,6 @@ import { GoogleButton } from "./google-button";
 import { AuthCard, OrDivider } from "./auth-card";
 
 export function SignUpForm({ callbackUrl }: { callbackUrl: string }) {
-  const router = useRouter();
   const [photo, setPhoto] = useState<File | null>(null);
   const [formError, setFormError] = useState<string | null>(null);
   const {
@@ -62,9 +60,10 @@ export function SignUpForm({ callbackUrl }: { callbackUrl: string }) {
       }
     }
     toast.success("Account created. Welcome to PizzaHub!");
-    // No router.refresh() here: it re-runs the auth layout, which would redirect to the dashboard
-    // and override the return URL. Navigating to a dynamic route already fetches fresh data.
-    router.replace(callbackUrl);
+    // Hard navigation on purpose: the client router may have cached the earlier guest redirect for the
+    // requested page, which would bounce a freshly signed-in user straight back here. A full load always
+    // renders with the new session cookie.
+    window.location.replace(callbackUrl);
   }
 
   return (

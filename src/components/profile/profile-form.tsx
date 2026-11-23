@@ -111,7 +111,7 @@ export function ProfileForm() {
             <div>
               <dt className="text-muted-foreground">Account</dt>
               <dd>
-                <StatusBadge status={me.isBlocked ? "rejected" : "approved"} className="capitalize" />
+                <StatusBadge status={me.isBlocked ? "rejected" : "approved"} label={me.isBlocked ? "Blocked" : "Active"} />
               </dd>
             </div>
           </dl>

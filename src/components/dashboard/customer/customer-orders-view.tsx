@@ -19,6 +19,7 @@ import { EmptyState } from "@/components/shared/empty-state";
 import { StatusBadge } from "@/components/shared/status-badge";
 import { ItemImage } from "@/components/menu/item-image";
 import { DashboardHeading } from "../dashboard-heading";
+import { RecordCard, RecordList } from "../record-card";
 
 type Filter = "all" | OrderStatus;
 
@@ -85,7 +86,8 @@ export function CustomerOrdersView() {
           action={filter === "all" ? <ButtonLink href="/menu">Explore Pizza Menu</ButtonLink> : undefined}
         />
       ) : (
-        <div className="overflow-x-auto rounded-2xl border bg-card">
+        <>
+        <div className="hidden overflow-x-auto rounded-2xl border bg-card xl:block">
           <Table>
             <TableHeader>
               <TableRow>
@@ -131,6 +133,35 @@ export function CustomerOrdersView() {
             </TableBody>
           </Table>
         </div>
+        <RecordList>
+          {visible.map((order) => (
+            <RecordCard
+              key={order._id}
+              media={<ItemImage src={order.item?.images[0]} alt={order.item?.itemName ?? "Item"} sizes="64px" className="size-14 shrink-0 rounded-xl" />}
+              title={order.item?.itemName ?? "Removed item"}
+              subtitle={order.vendor?.businessName || order.vendor?.name || "Vendor"}
+              badge={<StatusBadge status={order.status} />}
+              fields={[
+                { label: "Delivery date", value: formatDate(order.deliveryDate) },
+                { label: "Requested", value: formatDate(order.createdAt) },
+                { label: "Delivery address", value: order.deliveryAddress, wide: true },
+              ]}
+              actions={
+                <>
+                  <Button variant="outline" size="sm" render={<Link href={`/dashboard/customer/orders/${order._id}`} />} nativeButton={false}>
+                    <Eye /> Details
+                  </Button>
+                  {order.status === "pending" && (
+                    <Button variant="ghost" size="sm" className="text-destructive" onClick={() => setCancelling(order)}>
+                      <XCircle /> Cancel order
+                    </Button>
+                  )}
+                </>
+              }
+            />
+          ))}
+        </RecordList>
+        </>
       )}
 
       <ConfirmDialog

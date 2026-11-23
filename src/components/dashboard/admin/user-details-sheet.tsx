@@ -47,8 +47,7 @@ export function UserDetailsSheet({ userId, onOpenChange }: Props) {
                 <div>
                   <dt className="text-muted-foreground">Account</dt>
                   <dd>
-                    <StatusBadge status={user.isBlocked ? "rejected" : "approved"} />
-                    <span className="ml-2 text-xs text-muted-foreground">{user.isBlocked ? "Blocked" : "Active"}</span>
+                    <StatusBadge status={user.isBlocked ? "rejected" : "approved"} label={user.isBlocked ? "Blocked" : "Active"} />
                   </dd>
                 </div>
                 {user.role === "vendor" && (

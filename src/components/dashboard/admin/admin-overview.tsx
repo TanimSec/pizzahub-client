@@ -35,7 +35,7 @@ export function AdminOverview() {
         <StatCard label="Total transactions" value={data?.totalTransactions} icon={Receipt} tone="success" loading={isLoading} />
       </div>
       <div className="grid gap-6 lg:grid-cols-3">
-        <div className="lg:col-span-2">
+        <div className="min-w-0 lg:col-span-2">
           <ChartCard title="Subscription revenue" description="Paid transactions over the last 6 months" loading={isLoading} empty={!hasRevenue}>
             <SimpleAreaChart data={data?.charts.revenuePerMonth ?? []} xKey="month" yKey="revenue" label="Revenue" currency />
           </ChartCard>

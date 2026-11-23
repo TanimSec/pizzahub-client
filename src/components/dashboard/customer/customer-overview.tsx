@@ -35,7 +35,7 @@ export function CustomerOverview() {
         <StatCard label="Rejected orders" value={data?.rejected} icon={XCircle} tone="accent" loading={isLoading} />
       </div>
       <div className="grid gap-6 lg:grid-cols-3">
-        <div className="lg:col-span-2">
+        <div className="min-w-0 lg:col-span-2">
           <ChartCard title="Orders per month" description="Your orders in the last 6 months" loading={isLoading} empty={!data?.charts.ordersPerMonth.some((m) => m.count > 0)}>
             <SimpleBarChart data={data?.charts.ordersPerMonth ?? []} xKey="month" series={[{ key: "count", label: "Orders" }]} />
           </ChartCard>

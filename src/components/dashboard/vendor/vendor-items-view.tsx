@@ -19,6 +19,7 @@ import { EmptyState } from "@/components/shared/empty-state";
 import { StatusBadge } from "@/components/shared/status-badge";
 import { ItemImage } from "@/components/menu/item-image";
 import { DashboardHeading } from "../dashboard-heading";
+import { RecordCard, RecordList } from "../record-card";
 import { ItemDetailsDialog } from "./item-details-dialog";
 
 type Filter = "all" | ItemStatus;
@@ -111,7 +112,8 @@ export function VendorItemsView() {
           }
         />
       ) : (
-        <div className="overflow-x-auto rounded-2xl border bg-card">
+        <>
+        <div className="hidden overflow-x-auto rounded-2xl border bg-card xl:block">
           <Table>
             <TableHeader>
               <TableRow>
@@ -167,6 +169,40 @@ export function VendorItemsView() {
             </TableBody>
           </Table>
         </div>
+        <RecordList>
+          {visible.map((item) => (
+            <RecordCard
+              key={item._id}
+              media={<ItemImage src={item.images[0]} alt={item.itemName} sizes="64px" className="size-16 shrink-0 rounded-xl" />}
+              title={item.itemName}
+              subtitle={item.category}
+              badge={<StatusBadge status={item.status} />}
+              fields={[
+                { label: "Price", value: formatPrice(item.price) },
+                { label: "Location", value: item.location },
+              ]}
+              actions={
+                <>
+                  <Button variant="outline" size="sm" onClick={() => setViewing(item)}>
+                    <Eye /> View
+                  </Button>
+                  <Button variant="outline" size="sm" render={<Link href={`/dashboard/vendor/items/${item._id}/edit`} />} nativeButton={false}>
+                    <Pencil /> Edit
+                  </Button>
+                  {(item.status === "approved" || item.status === "inactive") && (
+                    <Button variant="outline" size="sm" disabled={setAvailability.isPending} onClick={() => toggle(item)}>
+                      <Power /> {item.status === "approved" ? "Hide" : "Make available"}
+                    </Button>
+                  )}
+                  <Button variant="ghost" size="sm" className="text-destructive" onClick={() => setDeleting(item)}>
+                    <Trash2 /> Delete
+                  </Button>
+                </>
+              }
+            />
+          ))}
+        </RecordList>
+        </>
       )}
 
       <ItemDetailsDialog item={viewing} onOpenChange={(o) => !o && setViewing(null)} />

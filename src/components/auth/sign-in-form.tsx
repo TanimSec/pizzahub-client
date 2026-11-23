@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -18,7 +17,6 @@ import { GoogleButton } from "./google-button";
 import { AuthCard, OrDivider } from "./auth-card";
 
 export function SignInForm({ callbackUrl }: { callbackUrl: string }) {
-  const router = useRouter();
   const [formError, setFormError] = useState<string | null>(null);
   const {
     register,
@@ -37,9 +35,10 @@ export function SignInForm({ callbackUrl }: { callbackUrl: string }) {
     }
     clearToken();
     toast.success("Welcome back!");
-    // No router.refresh() here: it re-runs the auth layout, which would redirect to the dashboard
-    // and override the return URL. Navigating to a dynamic route already fetches fresh data.
-    router.replace(callbackUrl);
+    // Hard navigation on purpose: the client router may have cached the earlier guest redirect for the
+    // requested page, which would bounce a freshly signed-in user straight back here. A full load always
+    // renders with the new session cookie.
+    window.location.replace(callbackUrl);
   }
 
   return (

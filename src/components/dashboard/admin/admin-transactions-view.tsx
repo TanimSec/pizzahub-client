@@ -13,6 +13,7 @@ import { Pager } from "@/components/shared/pager";
 import { StatusBadge } from "@/components/shared/status-badge";
 import { FilterSelect } from "@/components/menu/filter-select";
 import { DashboardHeading } from "../dashboard-heading";
+import { RecordCard, RecordList } from "../record-card";
 
 const STATUS_OPTIONS = [
   { value: "all", label: "All statuses" },
@@ -54,7 +55,7 @@ export function AdminTransactionsView() {
         <EmptyState title="No transactions yet" description="Payments appear here after vendors subscribe to Premium." />
       ) : (
         <>
-          <div className={`overflow-x-auto rounded-2xl border bg-card ${isFetching ? "opacity-70" : ""}`}>
+          <div className={`hidden overflow-x-auto rounded-2xl border bg-card xl:block ${isFetching ? "opacity-70" : ""}`}>
             <Table>
               <TableHeader>
                 <TableRow>
@@ -83,6 +84,21 @@ export function AdminTransactionsView() {
               </TableBody>
             </Table>
           </div>
+          <RecordList className={isFetching ? "opacity-70" : ""}>
+            {data.transactions.map((t) => (
+              <RecordCard
+                key={t._id}
+                title={t.vendor?.businessName || t.vendor?.name || "Unknown vendor"}
+                subtitle={t.vendor?.email}
+                badge={<StatusBadge status={t.status} />}
+                fields={[
+                  { label: "Plan", value: <span className="capitalize">{t.plan}</span> },
+                  { label: "Amount", value: formatPrice(t.amount, t.currency.toUpperCase()) },
+                  { label: "Date", value: formatDate(t.createdAt, "MMM d, yyyy h:mm a"), wide: true },
+                ]}
+              />
+            ))}
+          </RecordList>
           <Pager page={data.page} pages={data.pages} onChange={setPage} />
         </>
       )}

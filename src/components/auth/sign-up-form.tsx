@@ -62,8 +62,9 @@ export function SignUpForm({ callbackUrl }: { callbackUrl: string }) {
       }
     }
     toast.success("Account created. Welcome to PizzaHub!");
+    // No router.refresh() here: it re-runs the auth layout, which would redirect to the dashboard
+    // and override the return URL. Navigating to a dynamic route already fetches fresh data.
     router.replace(callbackUrl);
-    router.refresh();
   }
 
   return (

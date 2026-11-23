@@ -20,6 +20,7 @@ import { StatusBadge } from "@/components/shared/status-badge";
 import { initials } from "@/components/layout/user-menu";
 import { FilterSelect } from "@/components/menu/filter-select";
 import { DashboardHeading } from "../dashboard-heading";
+import { RecordCard, RecordList } from "../record-card";
 import { UserDetailsSheet } from "./user-details-sheet";
 
 const ROLE_OPTIONS = [
@@ -94,7 +95,7 @@ export function AdminUsersView() {
         <EmptyState title="No users found" description="Try a different name, email or role filter." />
       ) : (
         <>
-          <div className={`overflow-x-auto rounded-2xl border bg-card ${isFetching ? "opacity-70" : ""}`}>
+          <div className={`hidden overflow-x-auto rounded-2xl border bg-card xl:block ${isFetching ? "opacity-70" : ""}`}>
             <Table>
               <TableHeader>
                 <TableRow>
@@ -125,7 +126,7 @@ export function AdminUsersView() {
                     <TableCell className="capitalize text-muted-foreground">{u.role === "vendor" ? u.subscriptionPlan : "—"}</TableCell>
                     <TableCell className="whitespace-nowrap text-muted-foreground">{u.createdAt ? formatDate(u.createdAt) : "—"}</TableCell>
                     <TableCell>
-                      <StatusBadge status={u.isBlocked ? "rejected" : "approved"} className="" />
+                      <StatusBadge status={u.isBlocked ? "rejected" : "approved"} label={u.isBlocked ? "Blocked" : "Active"} />
                     </TableCell>
                     <TableCell>
                       <div className="flex justify-end gap-2">
@@ -144,6 +145,39 @@ export function AdminUsersView() {
               </TableBody>
             </Table>
           </div>
+          <RecordList className={isFetching ? "opacity-70" : ""}>
+            {data.users.map((u) => (
+              <RecordCard
+                key={u.id}
+                media={
+                  <Avatar className="size-12">
+                    <AvatarImage src={u.image ?? undefined} alt="" />
+                    <AvatarFallback>{initials(u.name)}</AvatarFallback>
+                  </Avatar>
+                }
+                title={u.name}
+                subtitle={u.email}
+                badge={<StatusBadge status={u.isBlocked ? "rejected" : "approved"} label={u.isBlocked ? "Blocked" : "Active"} />}
+                fields={[
+                  { label: "Role", value: <span className="capitalize">{u.role}</span> },
+                  { label: "Plan", value: <span className="capitalize">{u.role === "vendor" ? u.subscriptionPlan : "-"}</span> },
+                  { label: "Joined", value: u.createdAt ? formatDate(u.createdAt) : "-" },
+                ]}
+                actions={
+                  <>
+                    <Button variant="outline" size="sm" onClick={() => setViewing(u.id)}>
+                      <Eye /> Details
+                    </Button>
+                    {u.role !== "admin" && (
+                      <Button variant={u.isBlocked ? "secondary" : "ghost"} size="sm" className={u.isBlocked ? undefined : "text-destructive"} onClick={() => setTarget(u)}>
+                        {u.isBlocked ? <ShieldCheck /> : <Ban />} {u.isBlocked ? "Unblock" : "Block"}
+                      </Button>
+                    )}
+                  </>
+                }
+              />
+            ))}
+          </RecordList>
           <Pager page={data.page} pages={data.pages} onChange={setPage} />
         </>
       )}

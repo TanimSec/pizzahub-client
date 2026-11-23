@@ -19,7 +19,7 @@ interface Props {
 /** Stacked card used instead of a wide table on phones and tablets. */
 export function RecordCard({ media, title, subtitle, badge, fields, actions }: Props) {
   return (
-    <article className="space-y-3 rounded-2xl border bg-card p-4 shadow-sm">
+    <article className="min-w-0 space-y-3 rounded-2xl border bg-card p-4 shadow-sm">
       <div className="flex items-start justify-between gap-3">
         <div className="flex min-w-0 items-center gap-3">
           {media}
@@ -47,5 +47,5 @@ export function RecordCard({ media, title, subtitle, badge, fields, actions }: P
 
 /** Wrapper that is visible only below the breakpoint where tables are shown. */
 export function RecordList({ children, className }: { children: ReactNode; className?: string }) {
-  return <div className={cn("grid gap-3 sm:grid-cols-2 xl:hidden", className)}>{children}</div>;
+  return <div className={cn("grid grid-cols-1 gap-3 sm:grid-cols-2 xl:hidden", className)}>{children}</div>;
 }

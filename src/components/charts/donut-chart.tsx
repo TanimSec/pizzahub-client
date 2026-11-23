@@ -15,7 +15,7 @@ export function DonutChart({ data }: Props) {
     <ChartContainer config={config} className="mx-auto h-64 w-full">
       <PieChart>
         <ChartTooltip content={<ChartTooltipContent hideLabel nameKey="name" />} />
-        <Pie data={data} dataKey="value" nameKey="name" innerRadius={55} outerRadius={85} paddingAngle={3} strokeWidth={2}>
+        <Pie data={data} dataKey="value" nameKey="name" innerRadius={55} outerRadius={85} paddingAngle={data.length > 1 ? 3 : 0} strokeWidth={2}>
           {data.map((d, i) => (
             <Cell key={d.name} fill={`var(--chart-${(i % 5) + 1})`} />
           ))}

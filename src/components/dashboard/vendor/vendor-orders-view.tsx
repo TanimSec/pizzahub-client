@@ -19,6 +19,7 @@ import { StatusBadge } from "@/components/shared/status-badge";
 import { initials } from "@/components/layout/user-menu";
 import { ItemImage } from "@/components/menu/item-image";
 import { DashboardHeading } from "../dashboard-heading";
+import { RecordCard, RecordList } from "../record-card";
 
 type Filter = "all" | OrderStatus;
 
@@ -81,7 +82,8 @@ export function VendorOrdersView() {
       ) : visible.length === 0 ? (
         <EmptyState title="No orders here" description="Orders from customers will show up in this list." />
       ) : (
-        <div className="overflow-x-auto rounded-2xl border bg-card">
+        <>
+        <div className="hidden overflow-x-auto rounded-2xl border bg-card xl:block">
           <Table>
             <TableHeader>
               <TableRow>
@@ -136,6 +138,34 @@ export function VendorOrdersView() {
             </TableBody>
           </Table>
         </div>
+        <RecordList>
+          {visible.map((order) => (
+            <RecordCard
+              key={order._id}
+              media={<ItemImage src={order.item?.images[0]} alt={order.item?.itemName ?? "Item"} sizes="64px" className="size-14 shrink-0 rounded-xl" />}
+              title={order.item?.itemName ?? "Removed item"}
+              subtitle={`${order.customer?.name ?? "Customer"} · ${order.customer?.email ?? ""}`}
+              badge={<StatusBadge status={order.status} />}
+              fields={[
+                { label: "Delivery date", value: formatDate(order.deliveryDate) },
+                { label: "Requested", value: formatDate(order.createdAt) },
+                { label: "Address", value: order.deliveryAddress, wide: true },
+                { label: "Customer message", value: order.message || "None", wide: true },
+              ]}
+              actions={
+                <>
+                  <Button size="sm" className="flex-1" disabled={order.status !== "pending" || decide.isPending} onClick={() => setPending({ order, action: "accept" })}>
+                    <Check /> Accept
+                  </Button>
+                  <Button size="sm" variant="outline" className="flex-1" disabled={order.status !== "pending" || decide.isPending} onClick={() => setPending({ order, action: "reject" })}>
+                    <X /> Reject
+                  </Button>
+                </>
+              }
+            />
+          ))}
+        </RecordList>
+        </>
       )}
 
       <ConfirmDialog

@@ -37,8 +37,9 @@ export function SignInForm({ callbackUrl }: { callbackUrl: string }) {
     }
     clearToken();
     toast.success("Welcome back!");
+    // No router.refresh() here: it re-runs the auth layout, which would redirect to the dashboard
+    // and override the return URL. Navigating to a dynamic route already fetches fresh data.
     router.replace(callbackUrl);
-    router.refresh();
   }
 
   return (

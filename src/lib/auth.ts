@@ -1,5 +1,5 @@
 import { betterAuth } from "better-auth";
-import { APIError, createAuthMiddleware } from "better-auth/api";
+import { addOAuthServerContext, APIError, createAuthMiddleware, getOAuthState } from "better-auth/api";
 import { mongodbAdapter } from "better-auth/adapters/mongodb";
 import { jwt } from "better-auth/plugins";
 import { nextCookies } from "better-auth/next-js";
@@ -42,6 +42,14 @@ export const auth = betterAuth({
   },
   hooks: {
     before: createAuthMiddleware(async (ctx) => {
+      // Google sign-in: remember which account type the visitor chose on the sign-up page.
+      // The value is validated against an allow-list (never "admin") and stored in the OAuth state,
+      // so it survives the redirect to Google without depending on browser cookies.
+      if (ctx.path === "/sign-in/social") {
+        const chosen = (ctx.body?.additionalData as { signupRole?: string } | undefined)?.signupRole;
+        if (chosen && SELF_ASSIGNABLE_ROLES.includes(chosen)) await addOAuthServerContext({ signupRole: chosen });
+        return;
+      }
       if (ctx.path !== "/sign-up/email") return;
       const password = String(ctx.body?.password ?? "");
       if (password.length < 6 || !/[A-Z]/.test(password) || !/[a-z]/.test(password)) {
@@ -55,10 +63,19 @@ export const auth = betterAuth({
     user: {
       create: {
         before: async (user, ctx) => {
+          const oauthState = await getOAuthState().catch(() => null);
+          const roleFromOAuth = (oauthState?.serverContext as { signupRole?: string } | undefined)?.signupRole;
           const requested =
             (user as { role?: string }).role ??
+            roleFromOAuth ??
             readCookie(ctx?.request?.headers.get("cookie") ?? ctx?.headers?.get("cookie"), "ph_signup_role") ??
             "customer";
+          console.info(
+            "[auth] new account role:",
+            requested,
+            "| source:",
+            (user as { role?: string }).role ? "form" : roleFromOAuth ? "oauth-state" : "default-or-cookie",
+          );
           if (!SELF_ASSIGNABLE_ROLES.includes(requested)) {
             throw new APIError("BAD_REQUEST", { message: "Invalid account role" });
           }

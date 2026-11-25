@@ -65,8 +65,9 @@ export const auth = betterAuth({
         before: async (user, ctx) => {
           const oauthState = await getOAuthState().catch(() => null);
           const roleFromOAuth = (oauthState?.serverContext as { signupRole?: string } | undefined)?.signupRole;
+          const fromEmailForm = ctx?.path === "/sign-up/email" ? (user as { role?: string }).role : undefined;
           const requested =
-            (user as { role?: string }).role ??
+            fromEmailForm ??
             roleFromOAuth ??
             readCookie(ctx?.request?.headers.get("cookie") ?? ctx?.headers?.get("cookie"), "ph_signup_role") ??
             "customer";
@@ -74,7 +75,7 @@ export const auth = betterAuth({
             "[auth] new account role:",
             requested,
             "| source:",
-            (user as { role?: string }).role ? "form" : roleFromOAuth ? "oauth-state" : "default-or-cookie",
+            fromEmailForm ? "form" : roleFromOAuth ? "oauth-state" : "default-or-cookie",
           );
           if (!SELF_ASSIGNABLE_ROLES.includes(requested)) {
             throw new APIError("BAD_REQUEST", { message: "Invalid account role" });

@@ -22,7 +22,7 @@ export function GoogleButton({ callbackURL, role }: { callbackURL: string; role?
     if (role) {
       document.cookie = `ph_signup_role=${role}; path=/; max-age=600; SameSite=Lax`;
     }
-    const { error } = await signIn.social({ provider: "google", callbackURL });
+    const { error } = await signIn.social({ provider: "google", callbackURL, ...(role && { additionalData: { signupRole: role } }) });
     if (error) {
       toast.error(error.message ?? "Google sign-in failed. Please try again.");
       setLoading(false);
